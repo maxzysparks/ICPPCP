@@ -1,0 +1,55 @@
+{
+  "name": "icppcp",
+  "version": "0.1.0",
+  "description": "Integrated Caregiver-Patient-Provider Coordination Platform - A HIPAA-compliant healthcare coordination platform",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend-web",
+    "frontend-mobile"
+  ],
+  "scripts": {
+    "install:all": "npm install && npm run install:backend && npm run install:web && npm run install:mobile",
+    "install:backend": "cd backend && npm install",
+    "install:web": "cd frontend-web && npm install",
+    "install:mobile": "cd frontend-mobile && npm install",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:web\"",
+    "dev:backend": "cd backend && npm run start:dev",
+    "dev:web": "cd frontend-web && npm run dev",
+    "dev:mobile": "cd frontend-mobile && npm start",
+    "build": "npm run build:backend && npm run build:web",
+    "build:backend": "cd backend && npm run build",
+    "build:web": "cd frontend-web && npm run build",
+    "test": "npm run test:backend && npm run test:web",
+    "test:backend": "cd backend && npm run test",
+    "test:web": "cd frontend-web && npm run test",
+    "lint": "npm run lint:backend && npm run lint:web",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:web": "cd frontend-web && npm run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "husky": "^8.0.3",
+    "prettier": "^3.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maxzysparks/ICPPCP.git"
+  },
+  "keywords": [
+    "healthcare",
+    "hipaa",
+    "caregiver",
+    "patient-coordination",
+    "fhir",
+    "telehealth"
+  ],
+  "author": "ICPPCP Team",
+  "license": "PROPRIETARY"
+}
