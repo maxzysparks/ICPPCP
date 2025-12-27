@@ -11,6 +11,7 @@ import { ConfigService } from '@nestjs/config';
 import { User, UserStatus } from '../users/entities/user.entity';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -156,7 +157,7 @@ export class AuthService {
     refreshToken: string,
   ): Promise<{ accessToken: string }> {
     try {
-      const payload = this.jwtService.verify(refreshToken, {
+      const payload = this.jwtService.verify<JwtPayload>(refreshToken, {
         secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
       });
 
