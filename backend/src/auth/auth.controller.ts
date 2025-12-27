@@ -38,14 +38,14 @@ export class AuthController {
   @Post('logout')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  async logout(@Request() req) {
+  async logout(@Request() req: any) {
     await this.authService.logout(req.user.id);
     return { message: 'Logged out successfully' };
   }
 
   @Get('profile')
   @UseGuards(JwtAuthGuard)
-  async getProfile(@Request() req) {
+  getProfile(@Request() req: any) {
     return req.user;
   }
 }

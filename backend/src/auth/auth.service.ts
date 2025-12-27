@@ -1,7 +1,6 @@
 import {
   Injectable,
   UnauthorizedException,
-  BadRequestException,
   ConflictException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -22,11 +21,16 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async register(registerDto: RegisterDto): Promise<{ user: User; accessToken: string }> {
-    const { email, password, firstName, lastName, role, phoneNumber } = registerDto;
+  async register(
+    registerDto: RegisterDto,
+  ): Promise<{ user: User; accessToken: string }> {
+    const { email, password, firstName, lastName, role, phoneNumber } =
+      registerDto;
 
     // Check if user already exists
-    const existingUser = await this.userRepository.findOne({ where: { email } });
+    const existingUser = await this.userRepository.findOne({
+      where: { email },
+    });
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
     }
@@ -60,13 +64,18 @@ export class AuthService {
     const accessToken = this.generateAccessToken(user);
 
     // Remove sensitive data before returning
-    delete user.password;
-    delete user.verificationToken;
+    const {
+      password: _,
+      verificationToken: __,
+      ...userWithoutSensitiveData
+    } = user;
 
-    return { user, accessToken };
+    return { user: userWithoutSensitiveData as User, accessToken };
   }
 
-  async login(loginDto: LoginDto): Promise<{ user: User; accessToken: string; refreshToken: string }> {
+  async login(
+    loginDto: LoginDto,
+  ): Promise<{ user: User; accessToken: string; refreshToken: string }> {
     const { email, password } = loginDto;
 
     // Find user with password
@@ -82,7 +91,9 @@ export class AuthService {
 
     // Check if account is locked
     if (user.lockedUntil && user.lockedUntil > new Date()) {
-      throw new UnauthorizedException('Account is temporarily locked. Please try again later.');
+      throw new UnauthorizedException(
+        'Account is temporarily locked. Please try again later.',
+      );
     }
 
     // Verify password
@@ -102,13 +113,16 @@ export class AuthService {
     }
 
     // Check if user is active
-    if (user.status !== UserStatus.ACTIVE && user.status !== UserStatus.PENDING_VERIFICATION) {
+    if (
+      user.status !== UserStatus.ACTIVE &&
+      user.status !== UserStatus.PENDING_VERIFICATION
+    ) {
       throw new UnauthorizedException('Account is not active');
     }
 
     // Reset failed login attempts
     user.failedLoginAttempts = 0;
-    user.lockedUntil = null;
+    user.lockedUntil = undefined;
     user.lastLoginAt = new Date();
 
     // Generate tokens
@@ -121,10 +135,13 @@ export class AuthService {
     await this.userRepository.save(user);
 
     // Remove sensitive data
-    delete user.password;
-    delete user.refreshToken;
+    const {
+      password: _pwd,
+      refreshToken: _token,
+      ...userWithoutSensitive
+    } = user;
 
-    return { user, accessToken, refreshToken };
+    return { user: userWithoutSensitive as User, accessToken, refreshToken };
   }
 
   async validateUser(userId: string): Promise<User> {
@@ -135,7 +152,9 @@ export class AuthService {
     return user;
   }
 
-  async refreshAccessToken(refreshToken: string): Promise<{ accessToken: string }> {
+  async refreshAccessToken(
+    refreshToken: string,
+  ): Promise<{ accessToken: string }> {
     try {
       const payload = this.jwtService.verify(refreshToken, {
         secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
@@ -161,13 +180,13 @@ export class AuthService {
       const accessToken = this.generateAccessToken(user);
 
       return { accessToken };
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException('Invalid or expired refresh token');
     }
   }
 
   async logout(userId: string): Promise<void> {
-    await this.userRepository.update(userId, { refreshToken: null });
+    await this.userRepository.update(userId, { refreshToken: undefined });
   }
 
   private generateAccessToken(user: User): string {
@@ -188,7 +207,7 @@ export class AuthService {
 
     return this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-      expiresIn: this.configService.get<string>('JWT_REFRESH_EXPIRATION') || '7d',
+      expiresIn: '7d',
     });
   }
 
