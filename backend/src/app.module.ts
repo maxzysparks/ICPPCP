@@ -9,6 +9,7 @@ import { MedicationsModule } from './medications/medications.module';
 import { AppointmentsModule } from './appointments/appointments.module';
 import { CaregiversModule } from './caregivers/caregivers.module';
 import { ProvidersModule } from './providers/providers.module';
+import { CareTeamsModule } from './care-teams/care-teams.module';
 import databaseConfig from './config/database.config';
 
 @Module({
@@ -39,6 +40,7 @@ import databaseConfig from './config/database.config';
     AppointmentsModule,
     CaregiversModule,
     ProvidersModule,
+    CareTeamsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
