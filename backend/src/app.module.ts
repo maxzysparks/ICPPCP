@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { PatientsModule } from './patients/patients.module';
+import { MedicationsModule } from './medications/medications.module';
 import databaseConfig from './config/database.config';
 
 @Module({
@@ -31,6 +32,7 @@ import databaseConfig from './config/database.config';
     }),
     AuthModule,
     PatientsModule,
+    MedicationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
