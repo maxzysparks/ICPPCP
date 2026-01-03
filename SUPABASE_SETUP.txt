@@ -1,0 +1,96 @@
+SUPABASE DATABASE SETUP FOR ICPPCP MVP
+========================================
+
+STEP 1: CREATE SUPABASE ACCOUNT
+--------------------------------
+1. Go to: https://supabase.com
+2. Click "Start your project"
+3. Sign up with GitHub (recommended) or email
+4. Verify your email
+
+STEP 2: CREATE NEW PROJECT
+---------------------------
+1. Click "New Project"
+2. Fill in:
+   - Name: ICPPCP-MVP
+   - Database Password: (Generate strong password - SAVE THIS!)
+   - Region: Choose closest to you (e.g., West US, Europe West)
+   - Pricing Plan: FREE (500MB database, perfect for MVP)
+3. Click "Create new project"
+4. Wait 2-3 minutes for database to provision
+
+STEP 3: GET DATABASE CONNECTION STRING
+---------------------------------------
+1. In your project dashboard, click "Settings" (gear icon)
+2. Click "Database" in left sidebar
+3. Scroll to "Connection string"
+4. Select "URI" tab
+5. Copy the connection string (looks like):
+   postgresql://postgres:[YOUR-PASSWORD]@db.xxx.supabase.co:5432/postgres
+
+STEP 4: UPDATE YOUR .ENV FILE
+------------------------------
+Replace the database values in backend/.env with:
+
+DB_HOST=db.xxx.supabase.co
+DB_PORT=5432
+DB_NAME=postgres
+DB_USER=postgres
+DB_PASSWORD=[YOUR-PASSWORD-FROM-STEP-2]
+
+OR use the full connection string in typeorm.config.ts
+
+STEP 5: TEST CONNECTION
+-----------------------
+Run from backend folder:
+npm run build
+
+STEP 6: GENERATE MIGRATIONS
+----------------------------
+Run from backend folder:
+npm run migration:generate -- src/migrations/InitialSchema
+
+STEP 7: RUN MIGRATIONS
+----------------------
+npm run migration:run
+
+STEP 8: VERIFY IN SUPABASE
+---------------------------
+1. Go to Supabase dashboard
+2. Click "Table Editor"
+3. You should see all your tables:
+   - users
+   - patients
+   - providers
+   - caregivers
+   - medications
+   - appointments
+   - care_teams
+   - care_team_members
+
+TROUBLESHOOTING
+---------------
+If connection fails:
+1. Check password is correct
+2. Verify IP whitelist (Supabase allows all by default)
+3. Check SSL is enabled in typeorm.config.ts
+
+SECURITY NOTES
+--------------
+- Never commit .env file to git (already in .gitignore)
+- Use strong database password
+- Enable Row Level Security in Supabase after MVP
+- Rotate passwords before production
+
+NEXT STEPS AFTER SETUP
+-----------------------
+1. Test API endpoints with Postman
+2. Create seed data for demo
+3. Deploy backend to Railway/Render
+4. Connect frontend
+5. Ready for investor pitch!
+
+SUPPORT
+-------
+Supabase Docs: https://supabase.com/docs
+Community: https://github.com/supabase/supabase/discussions

@@ -17,7 +17,7 @@ export enum UserStatus {
 
 @Entity('users')
 @Index(['email'], { unique: true })
-@Index(['phoneNumber'], { unique: true, where: 'phone_number IS NOT NULL' })
+@Index(['phoneNumber'], { unique: true, where: '"phoneNumber" IS NOT NULL' })
 export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 255 })
   email: string;

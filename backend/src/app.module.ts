@@ -29,8 +29,11 @@ import databaseConfig from './config/database.config';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME') || 'icppcp_dev',
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: configService.get('NODE_ENV') === 'development',
+        synchronize: true, // Temporarily enabled to create tables - will disable after setup
+        migrations: [__dirname + '/migrations/*{.ts,.js}'],
+        migrationsRun: false, // Run migrations manually
         logging: configService.get('DB_LOGGING') === 'true',
+        ssl: { rejectUnauthorized: false }, // Required for Supabase
       }),
       inject: [ConfigService],
     }),
